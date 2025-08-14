@@ -1,0 +1,32 @@
+
+import { test, expect } from '@playwright/test';
+test('doc appointment', async ({ page }) => {
+  test.setTimeout(60000);
+  await page.goto('http://localhost/telehealth/index.php');
+  await page.getByRole('link', { name: 'Doctors', exact: true }).click();
+  const page1Promise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Get More Details' }).click();
+  const page1 = await page1Promise;
+  const page2Promise = page1.waitForEvent('popup');
+  await page1.locator('button').filter({ hasText: /^Full Profile$/ }).click();
+  const page2 = await page2Promise;
+  await page2.locator('select[name="doctors-name"]').selectOption('Prof. Dr. Jamal Khan');
+  await page2.locator('select[name="departments-name"]').selectOption('Child Specialist');
+  await page2.getByPlaceholder('Enter Your Name').click();
+  await page2.getByPlaceholder('Enter Your Name').fill('Musfiq');
+  await page2.getByPlaceholder('Enter Your Number').click();
+  await page2.getByPlaceholder('Enter Your Number').fill('01635894128');
+  await page2.getByPlaceholder('Enter Your Email').click();
+  await page2.getByPlaceholder('Enter Your Email').fill('musfiq@gmail.com');
+  await page2.getByPlaceholder('Enter Your Symptoms').click();
+  await page2.getByPlaceholder('Enter Your Symptoms').fill('Fever');
+  await page2.getByPlaceholder('Enter Your Age').click();
+  await page2.getByPlaceholder('Enter Your Age').fill('26');
+  await page2.locator('select[name="time"]').selectOption('02:30 PM - 8.30 PM');
+  await page1.locator('#dp1734930056397').fill('2024-02-12');
+  // await page2.locator('placeholder[name="Select the date"]').check();
+  await page2.getByLabel('Male', { exact: true }).check();
+  await page2.getByPlaceholder('Enter Your Address Here...').click();
+  await page2.getByPlaceholder('Enter Your Address Here...').fill('Dhaka');
+  await page2.getByRole('button', { name: 'Submit' }).click();
+});
